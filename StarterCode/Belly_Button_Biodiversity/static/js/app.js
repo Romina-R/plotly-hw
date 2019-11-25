@@ -1,30 +1,79 @@
 function buildMetadata(sample) {
-
   // @TODO: Complete the following function that builds the metadata panel
-
-  // Use `d3.json` to fetch the metadata for a sample
+    // Use `d3.json` to fetch the metadata for a sample
+  d3.json(`/metadata/${sample}`).then((data) => {
     // Use d3 to select the panel with id of `#sample-metadata`
+    var metaData = d3.select("#sample-metadata"); 
+      // Use `.html("") to clear any existing metadata
+    metaData.html("");
+      // Use `Object.entries` to add each key and value pair to the panel
+      // Hint: Inside the loop, you will need to use d3 to append new
+      // tags for each key-value in the metadata.
+    
+    Object.entries(data).forEach(([key,value]) => {
+      metaData.append("h6").text(`${key}: ${value}`);
+        // console.log(key, value);
+        });
+      });
+  }
 
-    // Use `.html("") to clear any existing metadata
-
-    // Use `Object.entries` to add each key and value pair to the panel
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
-
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
-}
-
-function buildCharts(sample) {
-
-  // @TODO: Use `d3.json` to fetch the sample data for the plots
-
-    // @TODO: Build a Bubble Chart using the sample data
-
-    // @TODO: Build a Pie Chart
-    // HINT: You will need to use slice() to grab the top 10 sample_values,
-    // otu_ids, and labels (10 each).
-}
+  function buildCharts(sample) {
+    // @TODO: Use `d3.json` to fetch the sample data for the plots
+    d3.json(`/samples/${sample}`).then((data) => {
+      const otu_ids = data.otu_ids;
+      const sample_values = data.sample_values;
+      const otu_labels = data.otu_labels;
+      //format data is returned in from app.py:
+    //   data = {
+    //     "otu_ids": sample_data.otu_id.values.tolist(),
+    //     "sample_values": sample_data[sample].values.tolist(),
+    //     "otu_labels": sample_data.otu_label.tolist(),
+      // @TODO: Build a Bubble Char t using the sample data
+      var trace1 = {
+        x: otu_ids,
+        y: sample_values,
+        text: otu_labels,
+        mode: 'markers',
+        marker: {
+          color: otu_ids,
+          size: sample_values, 
+          colorscale: 'YIGnBu' 
+        }
+      };
+      
+      var data = [trace1];
+      
+      var layout = {
+        title: 'Marker Size',
+        showlegend: false,
+        height: 600,
+        width: 600,
+        xaxis: { title: "OTU ID"},
+        yaxis: { title: "Sample Values"}
+      };
+  
+      Plotly.newPlot("bubble", data, layout);
+  
+      // @TODO: Build a Pie Chart
+      var trace2 = {
+        labels: otu_ids.slice(0,10),
+        values: sample_values.slice(0,10),
+        hovertext: otu_labels.slice(0,10),
+        name: "Pie-Chart",
+        type: 'pie'
+        };
+      
+      var pieChart = [trace2];   
+  
+      var pieLayout = {
+        title: "Pie Chart" };
+  
+      Plotly.newPlot("pie", pieChart, pieLayout);
+    });
+  
+  };
+  
+  
 
 function init() {
   // Grab a reference to the dropdown select element
