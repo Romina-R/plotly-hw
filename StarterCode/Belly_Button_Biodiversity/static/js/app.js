@@ -1,3 +1,5 @@
+console.log("Helloooooo");
+
 function buildMetadata(sample) {
   // @TODO: Complete the following function that builds the metadata panel
     // Use `d3.json` to fetch the metadata for a sample
@@ -12,10 +14,10 @@ function buildMetadata(sample) {
     
     Object.entries(data).forEach(([key,value]) => {
       metaData.append("h6").text(`${key}: ${value}`);
-        // console.log(key, value);
+        console.log(key, value);
         });
       });
-  }
+  };
 
   function buildCharts(sample) {
     // @TODO: Use `d3.json` to fetch the sample data for the plots
@@ -37,10 +39,10 @@ function buildMetadata(sample) {
         marker: {
           color: otu_ids,
           size: sample_values, 
-          colorscale: 'YIGnBu' 
-        }
+          colorscale: "Earth" 
+        };
       };
-      
+      // 'YIGnBu' 
       var data = [trace1];
       
       var layout = {
@@ -52,7 +54,7 @@ function buildMetadata(sample) {
         yaxis: { title: "Sample Values"}
       };
   
-      Plotly.newPlot("bubble", data, layout);
+      Plotly.plot("bubble", data, layout);
   
       // @TODO: Build a Pie Chart
       var trace2 = {
@@ -68,9 +70,8 @@ function buildMetadata(sample) {
       var pieLayout = {
         title: "Pie Chart" };
   
-      Plotly.newPlot("pie", pieChart, pieLayout);
+      Plotly.plot("pie", pieChart, pieLayout);
     });
-  
   };
   
   
@@ -82,7 +83,7 @@ function init() {
   // Use the list of sample names to populate the select options
   d3.json("/names").then((sampleNames) => {
     sampleNames.forEach((sample) => {
-      selector
+      selector        //.html("");///TESTING, was originally just selector
         .append("option")
         .text(sample)
         .property("value", sample);
@@ -97,9 +98,11 @@ function init() {
 
 function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
-  buildCharts(newSample);
   buildMetadata(newSample);
+  buildCharts(newSample);
+
 }
 
 // Initialize the dashboard
 init();
+
