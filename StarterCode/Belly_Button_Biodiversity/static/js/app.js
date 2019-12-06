@@ -39,8 +39,8 @@ function buildMetadata(sample) {
         marker: {
           color: otu_ids,
           size: sample_values, 
-          colorscale: "Earth" 
-        };
+          colorscale: 'YIGnBu' 
+        }
       };
       // 'YIGnBu' 
       var data = [trace1];
@@ -48,8 +48,7 @@ function buildMetadata(sample) {
       var layout = {
         title: 'Marker Size',
         showlegend: false,
-        height: 600,
-        width: 600,
+        margin: { t: 0 },
         xaxis: { title: "OTU ID"},
         yaxis: { title: "Sample Values"}
       };
@@ -68,7 +67,8 @@ function buildMetadata(sample) {
       var pieChart = [trace2];   
   
       var pieLayout = {
-        title: "Pie Chart" };
+        title: "Pie Chart",
+        margin: { t: 0, l: 0 } };
   
       Plotly.plot("pie", pieChart, pieLayout);
     });
